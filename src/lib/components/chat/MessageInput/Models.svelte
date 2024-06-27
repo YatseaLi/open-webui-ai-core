@@ -1,7 +1,9 @@
 <script lang="ts">
 	import { createEventDispatcher } from 'svelte';
+	// Adapt for Ollama in SAP AI Core
+	// import { generatePrompt } from '$lib/apis/ollama';
+	import { generatePrompt } from '$lib/apis/ollama-ai-core';
 
-	import { generatePrompt } from '$lib/apis/ollama';
 	import { models } from '$lib/stores';
 	import { splitStream } from '$lib/utils';
 	import { tick, getContext } from 'svelte';

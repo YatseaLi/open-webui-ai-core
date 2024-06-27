@@ -26,7 +26,10 @@ from starlette.responses import StreamingResponse, Response
 
 
 from apps.socket.main import app as socket_app
-from apps.ollama.main import (
+# Adaptation for Ollama in SAP AI Core
+# Drop-in and Replace apps.ollama.main with apps.ollama_ai_core.main 
+# from apps.ollama.main import (
+from apps.ollama_ai_core.main import (
     app as ollama_app,
     OpenAIChatCompletionForm,
     get_all_models as get_ollama_models,

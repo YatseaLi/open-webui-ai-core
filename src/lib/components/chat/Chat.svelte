@@ -36,7 +36,9 @@
 		splitStream
 	} from '$lib/utils';
 
-	import { generateChatCompletion } from '$lib/apis/ollama';
+	// Adaptation for Ollama in SAP AI Core
+	// import { generateChatCompletion } from '$lib/apis/ollama';
+	import { generateChatCompletion } from '$lib/apis/ollama-ai-core';
 	import {
 		addTagById,
 		createNewChat,

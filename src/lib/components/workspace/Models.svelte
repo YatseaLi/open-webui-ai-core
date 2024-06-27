@@ -10,7 +10,9 @@
 	import { WEBUI_NAME, mobile, models, settings, user } from '$lib/stores';
 	import { addNewModel, deleteModelById, getModelInfos, updateModelById } from '$lib/apis/models';
 
-	import { deleteModel } from '$lib/apis/ollama';
+	// Adaptation for Ollama in SAP AI Core
+	// import { deleteModel } from '$lib/apis/ollama';
+	import { deleteModel } from '$lib/apis/ollama-ai-core';
 	import { goto } from '$app/navigation';
 
 	import { getModels } from '$lib/apis';

@@ -3,13 +3,17 @@
 	import { createEventDispatcher, onMount, getContext, tick } from 'svelte';
 	const dispatch = createEventDispatcher();
 
+	// Adaptation for Ollama in SAP AI Core
+	// Drop-in and replace ollama with ollama-ai-core
 	import {
 		getOllamaConfig,
 		getOllamaUrls,
 		getOllamaVersion,
 		updateOllamaConfig,
 		updateOllamaUrls
-	} from '$lib/apis/ollama';
+	} from '$lib/apis/ollama-ai-core';
+	// } from '$lib/apis/ollama';
+
 	import {
 		getOpenAIConfig,
 		getOpenAIKeys,
@@ -33,6 +37,7 @@
 	};
 
 	// External
+	let OLLAMA_AI_CORE_BASE_URLS = [''];
 	let OLLAMA_BASE_URLS = [''];
 
 	let OPENAI_API_KEYS = [''];
@@ -65,11 +70,11 @@
 	};
 
 	const verifyOllamaHandler = async (idx) => {
-		OLLAMA_BASE_URLS = OLLAMA_BASE_URLS.filter((url) => url !== '').map((url) =>
+		OLLAMA_AI_CORE_BASE_URLS = OLLAMA_AI_CORE_BASE_URLS.filter((url) => url !== '').map((url) =>
 			url.replace(/\/$/, '')
 		);
 
-		OLLAMA_BASE_URLS = await updateOllamaUrls(localStorage.token, OLLAMA_BASE_URLS);
+		OLLAMA_AI_CORE_BASE_URLS = await updateOllamaUrls(localStorage.token, OLLAMA_AI_CORE_BASE_URLS);
 
 		const res = await getOllamaVersion(localStorage.token, idx).catch((error) => {
 			toast.error(error);
@@ -108,19 +113,19 @@
 	};
 
 	const updateOllamaUrlsHandler = async () => {
-		OLLAMA_BASE_URLS = OLLAMA_BASE_URLS.filter((url) => url !== '').map((url) =>
+		OLLAMA_AI_CORE_BASE_URLS = OLLAMA_AI_CORE_BASE_URLS.filter((url) => url !== '').map((url) =>
 			url.replace(/\/$/, '')
 		);
 
-		console.log(OLLAMA_BASE_URLS);
+		console.log(OLLAMA_AI_CORE_BASE_URLS);
 
-		if (OLLAMA_BASE_URLS.length === 0) {
+		if (OLLAMA_AI_CORE_BASE_URLS.length === 0) {
 			ENABLE_OLLAMA_API = false;
 			await updateOllamaConfig(localStorage.token, ENABLE_OLLAMA_API);
 
 			toast.info($i18n.t('Ollama API disabled'));
 		} else {
-			OLLAMA_BASE_URLS = await updateOllamaUrls(localStorage.token, OLLAMA_BASE_URLS);
+			OLLAMA_AI_CORE_BASE_URLS = await updateOllamaUrls(localStorage.token, OLLAMA_AI_CORE_BASE_URLS);
 
 			const ollamaVersion = await getOllamaVersion(localStorage.token).catch((error) => {
 				toast.error(error);
@@ -138,7 +143,7 @@
 		if ($user.role === 'admin') {
 			await Promise.all([
 				(async () => {
-					OLLAMA_BASE_URLS = await getOllamaUrls(localStorage.token);
+					OLLAMA_AI_CORE_BASE_URLS = await getOllamaUrls(localStorage.token);
 				})(),
 				(async () => {
 					OPENAI_API_BASE_URLS = await getOpenAIUrls(localStorage.token);
@@ -319,7 +324,9 @@
 
 			<div class="pr-1.5 space-y-2">
 				<div class="flex justify-between items-center text-sm">
-					<div class="  font-medium">{$i18n.t('Ollama API')}</div>
+					<!--Adaptation for Ollama in SAP AI Core-->
+					<!--div class="  font-medium">{$i18n.t('Ollama API')}</div-->
+					<div class="  font-medium">{$i18n.t('Ollama API in SAP AI Core')}</div>
 
 					<div class="mt-1">
 						<Switch
@@ -327,8 +334,8 @@
 							on:change={async () => {
 								updateOllamaConfig(localStorage.token, ENABLE_OLLAMA_API);
 
-								if (OLLAMA_BASE_URLS.length === 0) {
-									OLLAMA_BASE_URLS = [''];
+								if (OLLAMA_AI_CORE_BASE_URLS.length === 0) {
+									OLLAMA_AI_CORE_BASE_URLS = [''];
 								}
 							}}
 						/>
@@ -337,11 +344,12 @@
 				{#if ENABLE_OLLAMA_API}
 					<div class="flex w-full gap-1.5">
 						<div class="flex-1 flex flex-col gap-2">
-							{#each OLLAMA_BASE_URLS as url, idx}
+							{#each OLLAMA_AI_CORE_BASE_URLS as url, idx}
 								<div class="flex gap-1.5">
+									<!--Adaptation for Ollama in SAP AI Core-->
 									<input
 										class="w-full rounded-lg py-2 px-4 text-sm dark:text-gray-300 dark:bg-gray-850 outline-none"
-										placeholder={$i18n.t('Enter URL (e.g. http://localhost:11434)')}
+										placeholder={$i18n.t('Enter URL (e.g. https://api.ai.prod.eu-central-1.aws.ml.hana.ondemand.com/v2/inference/deployments/xxxxxxxxxxxx/v1)')}
 										bind:value={url}
 									/>
 
@@ -350,7 +358,7 @@
 											<button
 												class="px-1"
 												on:click={() => {
-													OLLAMA_BASE_URLS = [...OLLAMA_BASE_URLS, ''];
+													OLLAMA_AI_CORE_BASE_URLS = [...OLLAMA_AI_CORE_BASE_URLS, ''];
 												}}
 												type="button"
 											>
@@ -369,7 +377,7 @@
 											<button
 												class="px-1"
 												on:click={() => {
-													OLLAMA_BASE_URLS = OLLAMA_BASE_URLS.filter(
+													OLLAMA_AI_CORE_BASE_URLS = OLLAMA_AI_CORE_BASE_URLS.filter(
 														(url, urlIdx) => idx !== urlIdx
 													);
 												}}
@@ -417,10 +425,10 @@
 					</div>
 
 					<div class="mt-2 text-xs text-gray-400 dark:text-gray-500">
-						{$i18n.t('Trouble accessing Ollama?')}
+						{$i18n.t('Trouble accessing Ollama in SAP AI Core?')}
 						<a
 							class=" text-gray-300 font-medium underline"
-							href="https://github.com/open-webui/open-webui#troubleshooting"
+							href="https://github.com/YatseaLi/open-webui-ai-core#troubleshooting"
 							target="_blank"
 						>
 							{$i18n.t('Click here for help.')}

@@ -310,7 +310,7 @@ async def update_embedding_config(
         app.state.config.RAG_EMBEDDING_ENGINE = form_data.embedding_engine
         app.state.config.RAG_EMBEDDING_MODEL = form_data.embedding_model
 
-        if app.state.config.RAG_EMBEDDING_ENGINE in ["ollama", "openai"]:
+        if app.state.config.RAG_EMBEDDING_ENGINE in ["ollama", "ollama-ai-core", "openai"]:
             if form_data.openai_config is not None:
                 app.state.config.OPENAI_API_BASE_URL = form_data.openai_config.url
                 app.state.config.OPENAI_API_KEY = form_data.openai_config.key

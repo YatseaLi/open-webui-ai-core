@@ -1,6 +1,17 @@
 <script lang="ts">
 	import { toast } from 'svelte-sonner';
 
+	// Adapptation for Ollama in SAP AI Core
+	// import {
+	// 	createModel,
+	// 	deleteModel,
+	// 	downloadModel,
+	// 	getOllamaUrls,
+	// 	getOllamaVersion,
+	// 	pullModel,
+	// 	uploadModel,
+	// 	getOllamaConfig
+	// } from '$lib/apis/ollama';
 	import {
 		createModel,
 		deleteModel,
@@ -10,7 +21,7 @@
 		pullModel,
 		uploadModel,
 		getOllamaConfig
-	} from '$lib/apis/ollama';
+	} from '$lib/apis/ollama-ai-core';
 
 	import { WEBUI_API_BASE_URL, WEBUI_BASE_URL } from '$lib/constants';
 	import { WEBUI_NAME, models, MODEL_DOWNLOAD_POOL, user, config } from '$lib/stores';

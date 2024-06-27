@@ -1,8 +1,9 @@
 [project]
-name = "open-webui"
-description = "Open WebUI (Formerly Ollama WebUI)"
+name = "open-webui-ai-core"
+description = "Open WebUI adapted for Ollama in SAP AI Core"
 authors = [
-    { name = "Timothy Jaeryang Baek", email = "tim@openwebui.com" }
+    { name = "Timothy Jaeryang Baek", email = "tim@openwebui.com" },
+    { name = "Yatsea Li", email = "yatsealee@gmail.com" },
 ]
 license = { file = "LICENSE" }
 dependencies = [
@@ -66,8 +67,9 @@ dependencies = [
     "pytube==15.0.0",
     "extract_msg",
     "pydub",
-    "duckduckgo-search~=6.1.5"
+    "duckduckgo-search~=6.1.5",
 
+    "ai-core-sdk"
 ]
 readme = "README.md"
 requires-python = ">= 3.11, < 3.12.0a1"

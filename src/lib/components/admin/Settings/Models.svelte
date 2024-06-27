@@ -6,6 +6,17 @@
 	import { WEBUI_NAME, models, MODEL_DOWNLOAD_POOL, user, config } from '$lib/stores';
 	import { splitStream } from '$lib/utils';
 
+	// Adaptation for Ollama in SAP AI Core
+	// import {
+	// 	createModel,
+	// 	deleteModel,
+	// 	downloadModel,
+	// 	getOllamaUrls,
+	// 	getOllamaVersion,
+	// 	pullModel,
+	// 	uploadModel,
+	// 	getOllamaConfig
+	// } from '$lib/apis/ollama';
 	import {
 		createModel,
 		deleteModel,
@@ -15,7 +26,7 @@
 		pullModel,
 		uploadModel,
 		getOllamaConfig
-	} from '$lib/apis/ollama';
+	} from '$lib/apis/ollama-ai-core';
 	import { getModels as _getModels } from '$lib/apis';
 
 	import Tooltip from '$lib/components/common/Tooltip.svelte';

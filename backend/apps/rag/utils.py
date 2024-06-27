@@ -9,6 +9,12 @@ from apps.ollama.main import (
     GenerateEmbeddingsForm,
 )
 
+# Adapt for Ollama in SAP AI Core
+from apps.ollama_ai_core.main import (
+    generate_ollama_embeddings as generate_ollama_ai_core_embeddings,
+    GenerateEmbeddingsForm as GenerateEmbeddingsForm_AI_Core,
+)
+
 from huggingface_hub import snapshot_download
 
 from langchain_core.documents import Document
@@ -192,7 +198,7 @@ def rag_template(template: str, context: str, query: str):
     template = template.replace("[query]", query)
     return template
 
-
+# Adapt for Ollama in SAP AI Core
 def get_embedding_function(
     embedding_engine,
     embedding_model,
@@ -203,13 +209,22 @@ def get_embedding_function(
 ):
     if embedding_engine == "":
         return lambda query: embedding_function.encode(query).tolist()
-    elif embedding_engine in ["ollama", "openai"]:
+    elif embedding_engine in ["ollama", "ollama-ai-core", "openai"]:
         if embedding_engine == "ollama":
             func = lambda query: generate_ollama_embeddings(
                 GenerateEmbeddingsForm(
                     **{
                         "model": embedding_model,
                         "prompt": query,
+                    }
+                )
+            )
+        elif embedding_engine == "ollama-ai-core":
+            func = lambda query: generate_ollama_ai_core_embeddings(
+                GenerateEmbeddingsForm_AI_Core(
+                    **{
+                        "model": embedding_model,
+                        "prompt": query
                     }
                 )
             )
