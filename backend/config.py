@@ -465,31 +465,6 @@ OLLAMA_BASE_URLS = PersistentConfig(
     "OLLAMA_BASE_URLS", "ollama.base_urls", OLLAMA_BASE_URLS
 )
 
-####################################
-# Adaptation for Ollama in SAP AI Core
-# OLLAMA_BASE_URL
-####################################
-
-OLLAMA_API_BASE_URL = os.environ.get(
-    "OLLAMA_API_BASE_URL", "http://localhost:11434/api"
-)
-
-# OLLAMA_BASE_URL = os.environ.get("OLLAMA_BASE_URL", "")
-
-# if OLLAMA_BASE_URL == "" and OLLAMA_API_BASE_URL != "":
-#     OLLAMA_BASE_URL = (
-#         OLLAMA_API_BASE_URL[:-4]
-#         if OLLAMA_API_BASE_URL.endswith("/api")
-#         else OLLAMA_API_BASE_URL
-#     )
-
-# OLLAMA_BASE_URLS = os.environ.get("OLLAMA_BASE_URLS", "")
-# OLLAMA_BASE_URLS = OLLAMA_BASE_URLS if OLLAMA_BASE_URLS != "" else OLLAMA_BASE_URL
-
-# OLLAMA_BASE_URLS = [url.strip() for url in OLLAMA_BASE_URLS.split(";")]
-# OLLAMA_BASE_URLS = PersistentConfig(
-#     "OLLAMA_BASE_URLS", "ollama-ai-core.base_urls", OLLAMA_BASE_URLS
-# )
 
 ####################################
 # OPENAI_API
@@ -548,7 +523,6 @@ OPENAI_API_BASE_URL = "https://api.openai.com/v1"
 ####################################
 SAP_AI_API_URL = os.environ.get("SAP_AI_API_URL", "")
 SAP_AI_API_DEPLOYMENTS_URL = f"${SAP_AI_API_URL}/v2/lm/"
-
 SAP_AUTH_URL = os.environ.get("SAP_AUTH_URL", "")
 SAP_CLIENT_ID = os.environ.get("SAP_CLIENT_ID", "")
 SAP_CLIENT_SECRET = os.environ.get("SAP_CLIENT_SECRET", "")
