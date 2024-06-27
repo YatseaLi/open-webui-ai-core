@@ -49,7 +49,7 @@ from config import (
     SAP_CLIENT_ID,
     SAP_CLIENT_SECRET,
     SAP_RESOURCE_GROUP,
-    OLLAMA_AI_CORE_BASE_URLS,
+    OLLAMA_BASE_URLS,
     ENABLE_OLLAMA_API, # Reuse for Ollama in SAP AI Core
     AIOHTTP_CLIENT_TIMEOUT,
     ENABLE_MODEL_FILTER,
@@ -103,7 +103,7 @@ app.state.config.ENABLE_MODEL_FILTER = ENABLE_MODEL_FILTER
 app.state.config.MODEL_FILTER_LIST = MODEL_FILTER_LIST
 
 app.state.config.ENABLE_OLLAMA_API = ENABLE_OLLAMA_API
-app.state.config.OLLAMA_AI_CORE_BASE_URLS = OLLAMA_AI_CORE_BASE_URLS
+app.state.config.OLLAMA_BASE_URLS = OLLAMA_BASE_URLS
 app.state.MODELS = {}
 
 
@@ -145,7 +145,7 @@ async def update_config(form_data: OllamaConfigForm, user=Depends(get_admin_user
 
 @app.get("/urls")
 async def get_ollama_api_urls(user=Depends(get_admin_user)):
-    return {"OLLAMA_AI_CORE_BASE_URLS": app.state.config.OLLAMA_AI_CORE_BASE_URLS}
+    return {"OLLAMA_BASE_URLS": app.state.config.OLLAMA_BASE_URLS}
 
 
 class UrlUpdateForm(BaseModel):
@@ -154,10 +154,10 @@ class UrlUpdateForm(BaseModel):
 
 @app.post("/urls/update")
 async def update_ollama_api_url(form_data: UrlUpdateForm, user=Depends(get_admin_user)):
-    app.state.config.OLLAMA_AI_CORE_BASE_URLS = form_data.urls
+    app.state.config.OLLAMA_BASE_URLS = form_data.urls
 
-    log.info(f"app.state.config.OLLAMA_AI_CORE_BASE_URLS: {app.state.config.OLLAMA_AI_CORE_BASE_URLS}")
-    return {"OLLAMA_AI_CORE_BASE_URLS": app.state.config.OLLAMA_AI_CORE_BASE_URLS}
+    log.info(f"app.state.config.OLLAMA_BASE_URLS: {app.state.config.OLLAMA_BASE_URLS}")
+    return {"OLLAMA_BASE_URLS": app.state.config.OLLAMA_BASE_URLS}
 
 
 async def fetch_url(url):
@@ -244,7 +244,7 @@ async def get_all_models():
 
     if app.state.config.ENABLE_OLLAMA_API:
         tasks = [
-            fetch_url(f"{url}/api/tags") for url in app.state.config.OLLAMA_AI_CORE_BASE_URLS
+            fetch_url(f"{url}/api/tags") for url in app.state.config.OLLAMA_BASE_URLS
         ]
         responses = await asyncio.gather(*tasks)
 
@@ -284,7 +284,7 @@ async def get_ollama_tags(
                 return models
         return models
     else:
-        url = app.state.config.OLLAMA_AI_CORE_BASE_URLS[url_idx]
+        url = app.state.config.OLLAMA_BASE_URLS[url_idx]
 
         r = None
         try:
@@ -318,7 +318,7 @@ async def get_ollama_versions(url_idx: Optional[int] = None):
             # returns lowest version
             tasks = [
                 fetch_url(f"{url}/api/version")
-                for url in app.state.config.OLLAMA_AI_CORE_BASE_URLS
+                for url in app.state.config.OLLAMA_BASE_URLS
             ]
             responses = await asyncio.gather(*tasks)
             responses = list(filter(lambda x: x is not None, responses))
@@ -338,7 +338,7 @@ async def get_ollama_versions(url_idx: Optional[int] = None):
                     detail=ERROR_MESSAGES.OLLAMA_AI_CORE_NOT_FOUND,
                 )
         else:
-            url = app.state.config.OLLAMA_AI_CORE_BASE_URLS[url_idx]
+            url = app.state.config.OLLAMA_BASE_URLS[url_idx]
 
             r = None
             try:
@@ -374,7 +374,7 @@ class ModelNameForm(BaseModel):
 async def pull_model(
     form_data: ModelNameForm, url_idx: int = 0, user=Depends(get_admin_user)
 ):
-    url = app.state.config.OLLAMA_AI_CORE_BASE_URLS[url_idx]
+    url = app.state.config.OLLAMA_BASE_URLS[url_idx]
     log.info(f"url: {url}")
 
     r = None
@@ -407,7 +407,7 @@ async def push_model(
                 detail=ERROR_MESSAGES.MODEL_NOT_FOUND(form_data.name),
             )
 
-    url = app.state.config.OLLAMA_AI_CORE_BASE_URLS[url_idx]
+    url = app.state.config.OLLAMA_BASE_URLS[url_idx]
     log.debug(f"url: {url}")
 
     return await post_streaming_url(
@@ -428,7 +428,7 @@ async def create_model(
     form_data: CreateModelForm, url_idx: int = 0, user=Depends(get_admin_user)
 ):
     log.debug(f"form_data: {form_data}")
-    url = app.state.config.OLLAMA_AI_CORE_BASE_URLS[url_idx]
+    url = app.state.config.OLLAMA_BASE_URLS[url_idx]
     log.info(f"url: {url}")
 
     return await post_streaming_url(
@@ -457,7 +457,7 @@ async def copy_model(
                 detail=ERROR_MESSAGES.MODEL_NOT_FOUND(form_data.source),
             )
 
-    url = app.state.config.OLLAMA_AI_CORE_BASE_URLS[url_idx]
+    url = app.state.config.OLLAMA_BASE_URLS[url_idx]
     log.info(f"url: {url}")
 
     try:
@@ -506,7 +506,7 @@ async def delete_model(
                 detail=ERROR_MESSAGES.MODEL_NOT_FOUND(form_data.name),
             )
 
-    url = app.state.config.OLLAMA_AI_CORE_BASE_URLS[url_idx]
+    url = app.state.config.OLLAMA_BASE_URLS[url_idx]
     log.info(f"url: {url}")
 
     try:
@@ -548,7 +548,7 @@ async def show_model_info(form_data: ModelNameForm, user=Depends(get_verified_us
         )
 
     url_idx = random.choice(app.state.MODELS[form_data.name]["urls"])
-    url = app.state.config.OLLAMA_AI_CORE_BASE_URLS[url_idx]
+    url = app.state.config.OLLAMA_BASE_URLS[url_idx]
     log.info(f"url: {url}")
 
     try:
@@ -607,7 +607,7 @@ async def generate_embeddings(
                 detail=ERROR_MESSAGES.MODEL_NOT_FOUND(form_data.model),
             )
 
-    url = app.state.config.OLLAMA_AI_CORE_BASE_URLS[url_idx]
+    url = app.state.config.OLLAMA_BASE_URLS[url_idx]
     log.info(f"url: {url}")
 
     try:
@@ -659,7 +659,7 @@ def generate_ollama_embeddings(
                 detail=ERROR_MESSAGES.MODEL_NOT_FOUND(form_data.model),
             )
 
-    url = app.state.config.OLLAMA_AI_CORE_BASE_URLS[url_idx]
+    url = app.state.config.OLLAMA_BASE_URLS[url_idx]
     log.info(f"url: {url}")
 
     try:
@@ -730,7 +730,7 @@ async def generate_completion(
                 detail=ERROR_MESSAGES.MODEL_NOT_FOUND(form_data.model),
             )
 
-    url = app.state.config.OLLAMA_AI_CORE_BASE_URLS[url_idx]
+    url = app.state.config.OLLAMA_BASE_URLS[url_idx]
     log.info(f"url: {url}")
 
     return await post_streaming_url(
@@ -895,7 +895,7 @@ async def generate_chat_completion(
                 detail=ERROR_MESSAGES.MODEL_NOT_FOUND(form_data.model),
             )
 
-    url = app.state.config.OLLAMA_AI_CORE_BASE_URLS[url_idx]
+    url = app.state.config.OLLAMA_BASE_URLS[url_idx]
     log.info(f"url: {url}")
     log.debug(payload)
 
@@ -991,7 +991,7 @@ async def generate_openai_chat_completion(
                 detail=ERROR_MESSAGES.MODEL_NOT_FOUND(form_data.model),
             )
 
-    url = app.state.config.OLLAMA_AI_CORE_BASE_URLS[url_idx]
+    url = app.state.config.OLLAMA_BASE_URLS[url_idx]
     log.info(f"url: {url}")
 
     return await post_streaming_url(f"{url}/v1/chat/completions", json.dumps(payload))
@@ -1030,7 +1030,7 @@ async def get_openai_models(
         }
 
     else:
-        url = app.state.config.OLLAMA_AI_CORE_BASE_URLS[url_idx]
+        url = app.state.config.OLLAMA_BASE_URLS[url_idx]
         try:
             r = requests.request(method="GET", url=f"{url}/api/tags",headers=app.state.HEADERS, verify=True)
             r.raise_for_status()
@@ -1169,7 +1169,7 @@ async def download_model(
 
     if url_idx == None:
         url_idx = 0
-    url = app.state.config.OLLAMA_AI_CORE_BASE_URLS[url_idx]
+    url = app.state.config.OLLAMA_BASE_URLS[url_idx]
 
     file_name = parse_huggingface_url(form_data.url)
 
@@ -1188,7 +1188,7 @@ async def download_model(
 def upload_model(file: UploadFile = File(...), url_idx: Optional[int] = None):
     if url_idx == None:
         url_idx = 0
-    ollama_url = app.state.config.OLLAMA_AI_CORE_BASE_URLS[url_idx]
+    ollama_url = app.state.config.OLLAMA_BASE_URLS[url_idx]
 
     file_path = f"{UPLOAD_DIR}/{file.filename}"
 
@@ -1253,7 +1253,7 @@ def upload_model(file: UploadFile = File(...), url_idx: Optional[int] = None):
 # async def upload_model(file: UploadFile = File(), url_idx: Optional[int] = None):
 #     if url_idx == None:
 #         url_idx = 0
-#     url = app.state.config.OLLAMA_AI_CORE_BASE_URLS[url_idx]
+#     url = app.state.config.OLLAMA_BASE_URLS[url_idx]
 
 #     file_location = os.path.join(UPLOAD_DIR, file.filename)
 #     total_size = file.size
@@ -1290,7 +1290,7 @@ def upload_model(file: UploadFile = File(...), url_idx: Optional[int] = None):
 async def deprecated_proxy(
     path: str, request: Request, user=Depends(get_verified_user)
 ):
-    url = app.state.config.OLLAMA_AI_CORE_BASE_URLS[0]
+    url = app.state.config.OLLAMA_BASE_URLS[0]
     target_url = f"{url}/{path}"
 
     body = await request.body()

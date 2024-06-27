@@ -416,7 +416,6 @@ LITELLM_CONFIG_PATH = f"{DATA_DIR}/litellm/config.yaml"
 # OLLAMA_BASE_URL
 ####################################
 
-# Reuse for Ollama in SAP AI Core
 ENABLE_OLLAMA_API = PersistentConfig(
     "ENABLE_OLLAMA_API",
     "ollama.enable",
@@ -468,29 +467,29 @@ OLLAMA_BASE_URLS = PersistentConfig(
 
 ####################################
 # Adaptation for Ollama in SAP AI Core
-# OLLAMA_AI_CORE_BASE_URL
+# OLLAMA_BASE_URL
 ####################################
 
-OLLAMA_AI_CORE_API_BASE_URL = os.environ.get(
-    "OLLAMA_AI_CORE_API_BASE_URL", "http://localhost:11434/api"
+OLLAMA_API_BASE_URL = os.environ.get(
+    "OLLAMA_API_BASE_URL", "http://localhost:11434/api"
 )
 
-OLLAMA_AI_CORE_BASE_URL = os.environ.get("OLLAMA_AI_CORE_BASE_URL", "")
+# OLLAMA_BASE_URL = os.environ.get("OLLAMA_BASE_URL", "")
 
-if OLLAMA_AI_CORE_BASE_URL == "" and OLLAMA_AI_CORE_API_BASE_URL != "":
-    OLLAMA_AI_CORE_BASE_URL = (
-        OLLAMA_AI_CORE_API_BASE_URL[:-4]
-        if OLLAMA_AI_CORE_API_BASE_URL.endswith("/api")
-        else OLLAMA_AI_CORE_API_BASE_URL
-    )
+# if OLLAMA_BASE_URL == "" and OLLAMA_API_BASE_URL != "":
+#     OLLAMA_BASE_URL = (
+#         OLLAMA_API_BASE_URL[:-4]
+#         if OLLAMA_API_BASE_URL.endswith("/api")
+#         else OLLAMA_API_BASE_URL
+#     )
 
-OLLAMA_AI_CORE_BASE_URLS = os.environ.get("OLLAMA_AI_CORE_BASE_URLS", "")
-OLLAMA_AI_CORE_BASE_URLS = OLLAMA_AI_CORE_BASE_URLS if OLLAMA_AI_CORE_BASE_URLS != "" else OLLAMA_AI_CORE_BASE_URL
+# OLLAMA_BASE_URLS = os.environ.get("OLLAMA_BASE_URLS", "")
+# OLLAMA_BASE_URLS = OLLAMA_BASE_URLS if OLLAMA_BASE_URLS != "" else OLLAMA_BASE_URL
 
-OLLAMA_AI_CORE_BASE_URLS = [url.strip() for url in OLLAMA_AI_CORE_BASE_URLS.split(";")]
-OLLAMA_AI_CORE_BASE_URLS = PersistentConfig(
-    "OLLAMA_AI_CORE_BASE_URLS", "ollama-ai-core.base_urls", OLLAMA_AI_CORE_BASE_URLS
-)
+# OLLAMA_BASE_URLS = [url.strip() for url in OLLAMA_BASE_URLS.split(";")]
+# OLLAMA_BASE_URLS = PersistentConfig(
+#     "OLLAMA_BASE_URLS", "ollama-ai-core.base_urls", OLLAMA_BASE_URLS
+# )
 
 ####################################
 # OPENAI_API

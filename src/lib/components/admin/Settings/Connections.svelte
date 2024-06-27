@@ -37,7 +37,6 @@
 	};
 
 	// External
-	let OLLAMA_AI_CORE_BASE_URLS = [''];
 	let OLLAMA_BASE_URLS = [''];
 
 	let OPENAI_API_KEYS = [''];
@@ -70,11 +69,11 @@
 	};
 
 	const verifyOllamaHandler = async (idx) => {
-		OLLAMA_AI_CORE_BASE_URLS = OLLAMA_AI_CORE_BASE_URLS.filter((url) => url !== '').map((url) =>
+		OLLAMA_BASE_URLS = OLLAMA_BASE_URLS.filter((url) => url !== '').map((url) =>
 			url.replace(/\/$/, '')
 		);
 
-		OLLAMA_AI_CORE_BASE_URLS = await updateOllamaUrls(localStorage.token, OLLAMA_AI_CORE_BASE_URLS);
+		OLLAMA_BASE_URLS = await updateOllamaUrls(localStorage.token, OLLAMA_BASE_URLS);
 
 		const res = await getOllamaVersion(localStorage.token, idx).catch((error) => {
 			toast.error(error);
@@ -113,19 +112,19 @@
 	};
 
 	const updateOllamaUrlsHandler = async () => {
-		OLLAMA_AI_CORE_BASE_URLS = OLLAMA_AI_CORE_BASE_URLS.filter((url) => url !== '').map((url) =>
+		OLLAMA_BASE_URLS = OLLAMA_BASE_URLS.filter((url) => url !== '').map((url) =>
 			url.replace(/\/$/, '')
 		);
 
-		console.log(OLLAMA_AI_CORE_BASE_URLS);
+		console.log(OLLAMA_BASE_URLS);
 
-		if (OLLAMA_AI_CORE_BASE_URLS.length === 0) {
+		if (OLLAMA_BASE_URLS.length === 0) {
 			ENABLE_OLLAMA_API = false;
 			await updateOllamaConfig(localStorage.token, ENABLE_OLLAMA_API);
 
 			toast.info($i18n.t('Ollama API disabled'));
 		} else {
-			OLLAMA_AI_CORE_BASE_URLS = await updateOllamaUrls(localStorage.token, OLLAMA_AI_CORE_BASE_URLS);
+			OLLAMA_BASE_URLS = await updateOllamaUrls(localStorage.token, OLLAMA_BASE_URLS);
 
 			const ollamaVersion = await getOllamaVersion(localStorage.token).catch((error) => {
 				toast.error(error);
@@ -143,7 +142,7 @@
 		if ($user.role === 'admin') {
 			await Promise.all([
 				(async () => {
-					OLLAMA_AI_CORE_BASE_URLS = await getOllamaUrls(localStorage.token);
+					OLLAMA_BASE_URLS = await getOllamaUrls(localStorage.token);
 				})(),
 				(async () => {
 					OPENAI_API_BASE_URLS = await getOpenAIUrls(localStorage.token);
@@ -334,8 +333,8 @@
 							on:change={async () => {
 								updateOllamaConfig(localStorage.token, ENABLE_OLLAMA_API);
 
-								if (OLLAMA_AI_CORE_BASE_URLS.length === 0) {
-									OLLAMA_AI_CORE_BASE_URLS = [''];
+								if (OLLAMA_BASE_URLS.length === 0) {
+									OLLAMA_BASE_URLS = [''];
 								}
 							}}
 						/>
@@ -344,7 +343,7 @@
 				{#if ENABLE_OLLAMA_API}
 					<div class="flex w-full gap-1.5">
 						<div class="flex-1 flex flex-col gap-2">
-							{#each OLLAMA_AI_CORE_BASE_URLS as url, idx}
+							{#each OLLAMA_BASE_URLS as url, idx}
 								<div class="flex gap-1.5">
 									<!--Adaptation for Ollama in SAP AI Core-->
 									<input
@@ -358,7 +357,7 @@
 											<button
 												class="px-1"
 												on:click={() => {
-													OLLAMA_AI_CORE_BASE_URLS = [...OLLAMA_AI_CORE_BASE_URLS, ''];
+													OLLAMA_BASE_URLS = [...OLLAMA_BASE_URLS, ''];
 												}}
 												type="button"
 											>
@@ -377,7 +376,7 @@
 											<button
 												class="px-1"
 												on:click={() => {
-													OLLAMA_AI_CORE_BASE_URLS = OLLAMA_AI_CORE_BASE_URLS.filter(
+													OLLAMA_BASE_URLS = OLLAMA_BASE_URLS.filter(
 														(url, urlIdx) => idx !== urlIdx
 													);
 												}}
