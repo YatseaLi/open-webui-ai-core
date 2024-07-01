@@ -5,6 +5,9 @@ I have adapted Open WebUI for Ollama in SAP AI Core in this fork. Please refer t
 
 ![Open WebUI Demo](./demo.gif)
 
+## Find out the code adaptation for Ollama in SAP AI Core
+Simply search by keyword **Adapation** in your IDE across this project, then you will find all the necessary adaptations for SAP AI Core.
+
 ## Key Features of Open WebUI ⭐
 
 - 🚀 **Effortless Setup**: Install seamlessly using Docker or Kubernetes (kubectl, kustomize or helm) for a hassle-free experience with support for both `:ollama` and `:cuda` tagged images.
